@@ -2,7 +2,7 @@
 
 Basic E2E tests for TodoMVC (React) using Playwright.
 
-[text](https://todomvc.com/examples/react/dist/)
+[todomvc.com](https://todomvc.com/examples/react/dist/)
 
 ## Stack
 - Playwright
