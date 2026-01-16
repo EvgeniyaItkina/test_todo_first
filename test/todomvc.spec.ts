@@ -15,92 +15,101 @@ test('check you can add todo items -2', async ({ page }) => {
     const newTodoInput = page.getByPlaceholder('What needs to be done?');
 
     await newTodoInput.fill('buy milk')
-    await newTodoInput.press('Enter')\
+    await newTodoInput.press('Enter')
 
     await expect(page.getByText('buy milk')).toBeVisible();
 })
 /* -------------------------2------------------------- */
-test ('does page have buttons', async ({page}) => {
+test('does page have buttons and they are NOT visible', async ({ page }) => {
     await page.goto('https://todomvc.com/examples/react/dist/')
 
-    await page.getByRole('button', {name: 'All'})
-    await page.getByRole('button', {name: 'Active'})
-    await page.getByRole('button', {name: 'Completed'})
-    await page.getByRole('button', {name: 'Clear completed'})
+    await expect(page.getByRole('link', { name: 'All' })).toBeHidden();
+    await expect(page.getByRole('link', { name: 'Active' })).toBeHidden();
+    await expect(page.getByRole('link', { name: 'Completed' })).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Clear completed' })).toBeHidden();
 })
 
 /* -------------------------3------------------------- */
-/* not work */
-test ('edit todo item', async ({page}) => {
+test('does page have buttons and they ARE visible', async ({ page }) => {
     await page.goto('https://todomvc.com/examples/react/dist/')
 
-    
-    const newTodoInput = page.getByPlaceholder('What needs to be done?');
-    await newTodoInput.fill('buy milk')
-    await newTodoInput.press('Enter')
+    /* Add one task */
+    await page.locator('#todo-input').fill('buy milk')
+    await page.locator('#todo-input').press('Enter')
 
-    await page.getByText('buy milk').dblclick()
-    await page.getByText('buy milk').fill('buy 2 milk')
-    await page.getByText('buy 2 milk').press('Enter')
+    /*check visible*/
+    await expect(page.getByText('buy milk')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'All' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Active' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Completed' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Clear completed' })).toBeVisible();
 })
 
 /* -------------------------4------------------------- */
-/* not work */
-test ('delete todo item', async ({page}) => {
+test('edit todo item', async ({ page }) => {
+    await page.goto('https://todomvc.com/examples/react/dist/');
+    const newTodoInput = page.getByPlaceholder('What needs to be done?');
+
+    await newTodoInput.fill('buy milk')
+    await newTodoInput.press('Enter')
+
+    await page.getByTestId('todo-item-label').dblclick();
+    await page.getByTestId('todo-item').getByTestId('text-input').fill('milk 2');
+    await page.getByTestId('todo-item').getByTestId('text-input').press('Enter');
+
+    await expect(page.getByTestId('todo-item-label')).toContainText('milk 2');
+});
+
+/* -------------------------5------------------------- */
+
+test('delete todo item', async ({ page }) => {
     await page.goto('https://todomvc.com/examples/react/dist/')
-    
+
     const newTodoInput = page.getByPlaceholder('What needs to be done?');
     await newTodoInput.fill('buy milk')
     await newTodoInput.press('Enter')
 
-    
     await newTodoInput.fill('buy bread')
     await newTodoInput.press('Enter')
 
-    const todoItem1 = page.getByText('buy milk')
-    todoItem1.hover()
-    const deleteButton = todoItem1.getByRole('button', {name: 'destroy'})
-    await deleteButton.click()
-    await expect(todoItem1).not.toBeVisible();
-})
-
-/* -------------------------5------------------------- */
-test ('complete todo item', async ({page}) => {
-    await page.goto('https://todomvc.com/examples/react/dist/') 
-
-    const newTodoInput = page.getByPlaceholder('What needs to be done?');
-    await newTodoInput.fill('buy milk')
-    await newTodoInput.press('Enter')
-
-    const todoItem1 = page.getByText('buy milk')
-    const todoItem = page.locator('li:has-text("buy milk")')
-    const checkbox = todoItem.locator('.toggle')
-
-    await checkbox.check()
-    await expect(todoItem1).toHaveClass(/completed/)
-})
-
+    const item = page.getByTestId('todo-item').filter({ hasText: 'buy milk' });
+    await item.hover();
+    await item.getByRole('button', { name: '×' }).click();
+    await expect(item).not.toBeVisible();
+});
 
 /* -------------------------6------------------------- */
-test ('filter by button completed todo items', async ({page}) => {
+test('complete todo item', async ({ page }) => {
     await page.goto('https://todomvc.com/examples/react/dist/')
 
     const newTodoInput = page.getByPlaceholder('What needs to be done?');
     await newTodoInput.fill('buy milk')
     await newTodoInput.press('Enter')
 
-    const todoItem1 = page.getByText('buy milk')
-    const toggleCheckbox = todoItem1.getByRole('checkbox')
-    await toggleCheckbox.check()
-    await expect(todoItem1).toHaveClass(/completed/)
+    const item = page.locator('li', { hasText: 'buy milk' });
+    await item.locator('.toggle').check();
 
-    const completedButton = page.getByRole('button', {name: 'Completed'})
-    await completedButton.click()
-    await expect(todoItem1).toBeVisible();
+    await expect(item).toHaveClass(/completed/)
 })
 
 /* -------------------------7------------------------- */
-test ('filter by button completed todo items without not complited items', async ({page}) => {
+test('filter by button completed todo items', async ({ page }) => {
+    await page.goto('https://todomvc.com/examples/react/dist/')
+
+    const newTodoInput = page.getByPlaceholder('What needs to be done?');
+    await newTodoInput.fill('buy milk')
+    await newTodoInput.press('Enter')
+
+    const item = page.locator('li', { hasText: 'buy milk' });
+    await item.locator('.toggle').check();
+
+    await page.getByRole('link', { name: 'Completed' }).click();
+
+    await expect(item).toBeVisible();
+})
+
+/* -------------------------8------------------------- */
+test('filter by button completed todo items without not complited items', async ({ page }) => {
     await page.goto('https://todomvc.com/examples/react/dist/')
 
     const newTodoInput = page.getByPlaceholder('What needs to be done?');
@@ -116,32 +125,41 @@ test ('filter by button completed todo items without not complited items', async
     await newTodoInput.press('Enter')
     const todoItem3 = page.getByText('buy chips')
 
-    const toggleCheckbox = todoItem1.getByRole('checkbox')
-    await toggleCheckbox.check()
+    const item = page.locator('li', { hasText: 'buy milk' });
+    await item.locator('.toggle').check();
 
-    const completedButton = page.getByRole('button', {name: 'Completed'})
-    await completedButton.click()
+    await page.getByRole('link', { name: 'Completed' }).click();
     await expect(todoItem1).toBeVisible();
     await expect(todoItem2).not.toBeVisible();
+    await expect(todoItem3).not.toBeVisible();
 })
 
-/* -------------------------8------------------------- */
-test ('clear completed todo items', async ({page}) => {
-    await page.goto('https://todomvc.com/examples/react/dist/') 
+/* -------------------------9------------------------- */
+
+test('clear completed todo items', async ({ page }) => {
+    await page.goto('https://todomvc.com/examples/react/dist/')
 
     const newTodoInput = page.getByPlaceholder('What needs to be done?');
     await newTodoInput.fill('buy milk')
     await newTodoInput.press('Enter')
 
-    const todoItem1 = page.getByText('buy milk')
-    const toggleCheckbox = todoItem1.getByRole('checkbox')
-    await toggleCheckbox.check()
-    await expect(todoItem1).toHaveClass(/completed/)
+    const item = page.locator('li', { hasText: 'buy milk' });
+    await item.locator('.toggle').check();
+    await expect(item).toHaveClass(/completed/)
 
-    const clearCompletedButton = page.getByRole('button', {name: 'Clear completed'})
+    const clearCompletedButton = page.getByRole('button', { name: 'Clear completed' })
     await clearCompletedButton.click()
-    await expect(todoItem1).not.toBeVisible();
+    await expect(item).not.toBeVisible();
 })
 
-/* -------------------------9------------------------- */
+/* -------------------------10------------------------- */
+test('check H1 UI', async ({ page }) => {
+    await page.goto('https://todomvc.com/examples/react/dist/')
 
+    const header = page.getByText('todos')
+    await expect(header).toBeVisible();
+    await expect(header).toHaveCSS('color', 'rgb(184, 63, 69)');
+    await expect(header).toHaveCSS('font-size', '80px');
+    await expect(header).toHaveCSS('font-weight', '200');
+    await expect(header).toHaveCSS('position', 'absolute');
+});
