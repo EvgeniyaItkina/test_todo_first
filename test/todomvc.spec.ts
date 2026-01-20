@@ -15,7 +15,7 @@ test('check you can add todo items -2', async ({ page }) => {
 
     const model = createTodoModel(page)
     await model.navigate()
-    model.createNewItem('buy milk')
+    await model.createNewItem('buy milk')
 
     await expect(page.getByText('buy milk')).toBeVisible();
 })
@@ -58,7 +58,7 @@ test('edit todo item', async ({ page }) => {
 
     await model.createNewItem('buy milk')
 
-    model.editItem('buy milk', 'milk 2');
+    await model.editItem('buy milk', 'milk 2');
 
     await expect(page.getByTestId('todo-item-label')).toContainText('milk 2');
 });
@@ -91,9 +91,9 @@ test('complete todo item', async ({ page }) => {
     await model.navigate()
 
     await model.createNewItem('buy milk')
-    model.createNewItem('buy bread')
+    await model.createNewItem('buy bread')
 
-    model.todoItemToggle(0).click()
+    await model.todoItemToggle(0).click()
     await expect(model.todoItem(0)).toHaveClass(/completed/)
     await expect(model.todoItem(1)).not.toHaveClass(/completed/)
 })
@@ -103,7 +103,7 @@ test('filter by button completed todo items', async ({ page }) => {
     const model = createTodoModel(page)
     await model.navigate()
 
-    model.createNewItem('buy milk')
+    await model.createNewItem('buy milk')
 
     const item = model.todoItem(0);
     await item.locator('.toggle').check();
