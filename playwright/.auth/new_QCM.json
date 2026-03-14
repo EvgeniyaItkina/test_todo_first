@@ -1,0 +1,39 @@
+{
+  "cookies": [
+    {
+      "name": "_ga",
+      "value": "GA1.1.1813521186.1773427764",
+      "domain": ".visoft-eng.com",
+      "path": "/",
+      "expires": 1807987763.870517,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_DZT1XLSEQW",
+      "value": "GS2.1.s1773427763$o1$g1$t1773427764$j59$l0$h0",
+      "domain": ".visoft-eng.com",
+      "path": "/",
+      "expires": 1807987764.298696,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://visoft-test.visoft-eng.com:83",
+      "localStorage": [
+        {
+          "name": "avatar",
+          "value": "null"
+        },
+        {
+          "name": "main",
+          "value": "{\"token\":\"eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiRU1QTE9ZRUUiLCJjcmVhdGUiOiIyMDI2LTAzLTEzVDE4OjQ5OjI0LjE5NVoiLCJleHBpcmF0aW9uIjoxNzczNDcwOTY0MTk1LCJ1c2VySWQiOiI2OTI3ZjBlYTY1OGVhZTMyODFlZjZjMTIiLCJtZmEiOmZhbHNlLCJwcm9tcHQiOmZhbHNlfQ.K-EpZSM-vSJv-DH89pEjzYKkAYvwiEH2PIFfQx2YgLeif3lYQI8TKUtaRfiJ1bPzchYWvuZEhopfTjtwA5yf6Q\",\"mfa\":false,\"expired\":1773470964195}"
+        }
+      ]
+    }
+  ]
+}

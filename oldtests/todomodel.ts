@@ -39,6 +39,10 @@ export function createTodoModel(page: Page) {
             await expect(items).toHaveCount(count);
         },
 
+        items() {
+            return items;
+        },
+
         // Edits a todo item by its current text
         async editItem(oldItem: string, newItem: string) {
             const itemToEdit = items.filter({ hasText: oldItem });
