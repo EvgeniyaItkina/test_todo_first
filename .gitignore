@@ -1,4 +1,4 @@
 node_modules
 test-results
 .env
-.auth/new_QCM.json
+auth_data

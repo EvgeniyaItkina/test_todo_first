@@ -6,5 +6,5 @@ test('save user session', async ({ page }) => {
 
   await expect(page).toHaveURL(/dashboard/);
 
-  await page.context().storageState({ path: 'playwright/.auth/new_QCM.json' });
+  await page.context().storageState({ path: 'playwright/auth_data/new_QCM.json' });
 });
